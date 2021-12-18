@@ -1,6 +1,6 @@
 # Cooldevguys Base Docker PHP image 🐳
 
-Base docker PHP image to be used in the medimops projects. The image is based on Linux Alpine
+Base docker PHP image to be used in the cooldevguys php projects. The image is based on Linux Alpine
 
 ## Tools and extensions 🧰
 
@@ -15,6 +15,7 @@ The image includes the next extensions:
 - opcache
 - xdebug
 - amqp-c
+- redis
 
 `xdebug` enabling is handled with an env variable e.g. `$ENABLE_XDEBUG=true|false` and only in none `production`
 environment.
