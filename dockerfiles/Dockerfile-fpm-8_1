@@ -1,0 +1,65 @@
+FROM php:8.1-fpm-alpine as base
+
+LABEL maintainer="Cooldevguys"
+
+RUN apk --update upgrade \
+    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+    && apk add --no-cache --virtual .build-deps \
+    make \
+    autoconf \
+    automake \
+    gcc  \
+    g++ \
+    rabbitmq-c-dev \
+    && apk add  \
+    make \
+    icu-dev \
+    libzip-dev \
+    git  \
+    bash  \
+    wget  \
+    curl \
+    rabbitmq-c \
+    supervisor \
+    && pecl install apcu xdebug igbinary redis \
+    && docker-php-ext-install -j$(nproc) \
+    bcmath \
+    opcache \
+    intl \
+    zip \
+    pdo_mysql
+
+ADD ./scripts/install-rabbitmq.sh /root/
+RUN sh /root/install-rabbitmq.sh \
+    && docker-php-ext-enable \
+    apcu \
+    opcache \
+    xdebug \
+    amqp \
+    igbinary \
+    intl \
+    redis \
+    && pecl clear-cache \
+    && apk del .phpize-deps \
+    && apk del .build-deps \
+    && rm -rf /tmp/* /var/cache/* /var/www/html/* \
+    && docker-php-source delete \
+    rm -f /sbin/apk && rm -rf /etc/apk && rm -rf /lib/apk && rm -rf /usr/share/apk && rm -rf /var/lib/apk
+
+COPY ./config/ /usr/local/etc/php/conf.d/
+
+RUN mkdir /usr/local/etc/dev-extensions && mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/dev-extensions/
+
+COPY ./scripts/docker-php-entrypoint /usr/local/bin/
+COPY ./scripts/xdebug-control /usr/local/bin/pre-entrypoint/
+
+WORKDIR /var/www/app
+
+ENTRYPOINT ['/usr/local/bin/docker-php-entrypoint']
+
+FROM base as composer
+
+WORKDIR /app
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+

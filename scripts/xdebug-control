@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Set default value to false if the environment variable is not set
+ENABLE_XDEBUG=${ENABLE_XDEBUG:-"false"}
+
+if [ ! "production" == "$APP_ENV" ] && [ "$ENABLE_XDEBUG" = "true" ]; then
+  # Enable xdebug
+  ln -sf /usr/local/etc/dev-extension/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+  echo ">> [INFO] XDebug is enabled ⚠️"
+else
+  echo ">> [INFO] XDebug is disabled ✅"
+  # Disable xdebug
+  if [ -e /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ]; then
+    rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+  fi
+fi

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+php --version | grep cli > /dev/null
+sleep 3
+
+exec "$@"
