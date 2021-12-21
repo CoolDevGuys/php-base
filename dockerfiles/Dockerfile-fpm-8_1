@@ -1,7 +1,8 @@
-FROM php:8.1-fpm-alpine as base
+FROM php:8.1-fpm-alpine as dependencies
 
 LABEL maintainer="Cooldevguys"
 
+ADD ./scripts/install-rabbitmq.sh /root/
 RUN apk --update upgrade \
     && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && apk add --no-cache --virtual .build-deps \
@@ -14,6 +15,7 @@ RUN apk --update upgrade \
     && apk add  \
     make \
     icu-dev \
+    zip \
     libzip-dev \
     git  \
     bash  \
@@ -22,15 +24,14 @@ RUN apk --update upgrade \
     rabbitmq-c \
     supervisor \
     && pecl install apcu xdebug igbinary redis \
+    && docker-php-ext-configure zip \
     && docker-php-ext-install -j$(nproc) \
     bcmath \
     opcache \
     intl \
     zip \
-    pdo_mysql
-
-ADD ./scripts/install-rabbitmq.sh /root/
-RUN sh /root/install-rabbitmq.sh \
+    pdo_mysql \
+    && sh /root/install-rabbitmq.sh \
     && docker-php-ext-enable \
     apcu \
     opcache \
@@ -50,14 +51,14 @@ COPY ./config/ /usr/local/etc/php/conf.d/
 
 RUN mkdir /usr/local/etc/dev-extensions && mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/dev-extensions/
 
+FROM dependencies as base
+
 COPY ./scripts/docker-php-entrypoint /usr/local/bin/
 COPY ./scripts/xdebug-control /usr/local/bin/pre-entrypoint/
 
-WORKDIR /var/www/app
-
 ENTRYPOINT ['/usr/local/bin/docker-php-entrypoint']
 
-FROM base as composer
+FROM dependencies as composer
 
 WORKDIR /app
 
