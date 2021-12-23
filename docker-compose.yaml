@@ -8,6 +8,8 @@ services:
       dockerfile: dockerfiles/Dockerfile-fpm-8_1
     volumes:
       - ./tests:/var/www/html
+    environment:
+      - ENABLE_XDEBUG=false
     entrypoint: [ "/var/www/html/entrypoint-test" ]
     command: [ "php", "test.php" ]
 

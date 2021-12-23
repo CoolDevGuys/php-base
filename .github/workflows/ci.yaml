@@ -11,8 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Pull image
-        run: docker-compose pull
+        run: docker-compose build
       - run: docker-compose up
+        continue-on-error: false
 
   push_to_registry:
     name: Push Docker image to Docker Hub 🔼
