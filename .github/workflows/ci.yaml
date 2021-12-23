@@ -8,9 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Pull image
+      - name: Build image
         run: docker-compose build
-      - run: docker-compose up
+      - run: docker-compose run -e ENABLE_XDEBUG=false fpm-81 php test.php
+        continue-on-error: false
+      - run: docker-compose run -e ENABLE_XDEBUG=false composer-2 php test.php
         continue-on-error: false
 
   push_to_registry:
