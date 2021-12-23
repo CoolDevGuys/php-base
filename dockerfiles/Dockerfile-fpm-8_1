@@ -40,7 +40,7 @@ RUN apk --update upgrade \
     igbinary \
     intl \
     redis \
-    && pecl install xdebug && docker-php-ext-disable xdebug  \
+    && pecl install xdebug \
     && pecl clear-cache \
     && apk del .phpize-deps \
     && apk del .build-deps \
