@@ -17,5 +17,5 @@ assert(extension_loaded('pdo'));
 assert(extension_loaded('apcu'));
 assert(extension_loaded('amqp'));
 assert(extension_loaded('mbstring'));
-assert(extension_loaded('zend-opcache'));
+assert(extension_loaded('Zend OPcache'));
 

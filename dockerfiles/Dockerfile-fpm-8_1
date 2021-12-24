@@ -26,8 +26,8 @@ RUN apk --update upgrade \
     supervisor \
     && docker-php-ext-configure zip \
     && docker-php-ext-install -j$(nproc) \
-    bcmath \
     opcache \
+    bcmath \
     intl \
     zip \
     pdo_mysql \
