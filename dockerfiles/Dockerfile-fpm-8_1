@@ -2,7 +2,7 @@ FROM php:8.1-fpm-alpine as dependencies
 
 LABEL maintainer="Cooldevguys"
 
-ADD ./scripts/install-rabbitmq.sh /root/
+COPY --chown=root:www-data ./scripts/install-rabbitmq.sh /root/
 RUN apk --update upgrade \
     && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && apk add --no-cache --virtual .build-deps \
@@ -48,13 +48,14 @@ RUN apk --update upgrade \
     && docker-php-source delete \
     rm -f /sbin/apk && rm -rf /etc/apk && rm -rf /lib/apk && rm -rf /usr/share/apk && rm -rf /var/lib/apk
 
-COPY ./config/ /usr/local/etc/php/conf.d/
+COPY --chown=root:www-data ./config/ /usr/local/etc/php/conf.d/
 
 FROM dependencies as base
 
 RUN mkdir /usr/local/etc/dev-extensions && mv /usr/local/etc/php/conf.d/docker-php-ext-02-xdebug.ini /usr/local/etc/dev-extensions/
-COPY ./scripts/docker-php-entrypoint /usr/local/bin/
-COPY ./scripts/xdebug-control /usr/local/bin/pre-entrypoint/
+COPY --chown=root:www-data ./scripts/docker-php-entrypoint /usr/local/bin/
+COPY --chown=root:www-data ./scripts/xdebug-control /usr/local/bin/pre-entrypoint/
+
 ENTRYPOINT ['/usr/local/bin/docker-php-entrypoint']
 
 FROM dependencies as composer
