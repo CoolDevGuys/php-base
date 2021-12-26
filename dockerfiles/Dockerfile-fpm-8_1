@@ -24,6 +24,7 @@ RUN apk --update upgrade \
     curl \
     rabbitmq-c \
     supervisor \
+    binutils \
     && docker-php-ext-configure zip \
     && docker-php-ext-install -j$(nproc) \
     opcache \
@@ -41,6 +42,7 @@ RUN apk --update upgrade \
     intl \
     redis \
     && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
     && pecl clear-cache \
     && apk del .phpize-deps \
     && apk del .build-deps \
@@ -48,7 +50,7 @@ RUN apk --update upgrade \
     && docker-php-source delete \
     rm -f /sbin/apk && rm -rf /etc/apk && rm -rf /lib/apk && rm -rf /usr/share/apk && rm -rf /var/lib/apk
 
-COPY --chown=root:www-data ./config/ /usr/local/etc/php/conf.d/
+COPY ./config/ /usr/local/etc/php/conf.d/
 
 FROM dependencies as base
 
@@ -56,7 +58,7 @@ RUN mkdir /usr/local/etc/dev-extensions && mv /usr/local/etc/php/conf.d/docker-p
 COPY /scripts/docker-php-entrypoint /usr/local/bin/
 ADD ./scripts/xdebug-control /usr/local/bin/pre-entrypoint/
 
-RUN chown -R root:www-data /usr/local/bin
+RUN chown -R root:www-data /usr/local/bin /usr/local/etc && chmod -R 775 /usr/local/etc
 
 ENTRYPOINT ['/usr/local/bin/docker-php-entrypoint']
 
