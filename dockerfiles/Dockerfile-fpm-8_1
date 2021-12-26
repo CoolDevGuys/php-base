@@ -53,8 +53,10 @@ COPY --chown=root:www-data ./config/ /usr/local/etc/php/conf.d/
 FROM dependencies as base
 
 RUN mkdir /usr/local/etc/dev-extensions && mv /usr/local/etc/php/conf.d/docker-php-ext-02-xdebug.ini /usr/local/etc/dev-extensions/
-COPY --chown=root:www-data ./scripts/docker-php-entrypoint /usr/local/bin/
-COPY --chown=root:www-data ./scripts/xdebug-control /usr/local/bin/pre-entrypoint/
+COPY /scripts/docker-php-entrypoint /usr/local/bin/
+ADD ./scripts/xdebug-control /usr/local/bin/pre-entrypoint/
+
+RUN chown -R root:www-data /usr/local/bin
 
 ENTRYPOINT ['/usr/local/bin/docker-php-entrypoint']
 
