@@ -9,7 +9,7 @@ services:
     volumes:
       - ./tests:/var/www/html
     environment:
-      - ENABLE_XDEBUG=false
+      - XDEBUG_MODE=off
     entrypoint: [ "/var/www/html/entrypoint-test" ]
     command: [ "php", "test.php" ]
 
