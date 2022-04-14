@@ -13,10 +13,12 @@ RUN apk --update upgrade \
     g++ \
     rabbitmq-c-dev \
     pcre-dev \
+    libzip-dev \
     && apk add  \
     make \
     icu-dev \
     zip \
+    zlib \
     libzip-dev \
     git  \
     bash  \
@@ -32,6 +34,7 @@ RUN apk --update upgrade \
     intl \
     zip \
     pdo_mysql \
+    pcntl \
     && pecl install apcu igbinary redis \
     && sh /root/install-rabbitmq.sh \
     && docker-php-ext-enable \
@@ -40,6 +43,7 @@ RUN apk --update upgrade \
     amqp \
     igbinary \
     intl \
+    pcntl \
     redis \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
@@ -54,10 +58,12 @@ COPY ./config/ /usr/local/etc/php/conf.d/
 
 FROM dependencies as base
 
-RUN mkdir /usr/local/etc/dev-extensions && mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/dev-extensions/
+RUN mkdir /usr/local/etc/dev-extensions && mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/dev-extensions/ &&  \
+    mv /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini /usr/local/etc/dev-extensions/ &&\
+    mv /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 
 COPY /scripts/docker-php-entrypoint /usr/local/bin/
-COPY /scripts/xdebug-control /usr/local/bin/pre-boot/
+COPY /scripts/check-extensions /usr/local/bin/pre-boot/
 
 ENTRYPOINT ['/usr/local/bin/docker-php-entrypoint']
 

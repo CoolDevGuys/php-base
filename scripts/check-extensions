@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# Set default value to false if the environment variable is not set
+ENABLE_XDEBUG=${ENABLE_XDEBUG:-"false"}
+
+if [ ! "prod" == "$APP_ENV" ] && [ ! "staging" == "$APP_ENV" ]; then
+  if [ -e /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini ]; then
+      rm -f /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+  fi
+  echo ">> [INFO] Opcache is disabled"
+
+  if [ "$ENABLE_XDEBUG" = "true" ]; then
+    # Enable xdebug
+    ln -sf /usr/local/etc/dev-extensions/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    echo ">> [INFO] XDebug is enabled ⚠️"
+  else
+    # Disable xdebug
+      if [ -e /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ]; then
+        rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      fi
+      echo ">> [INFO] XDebug is disabled ✅"
+  fi
+else
+  ln -sf /usr/local/etc/dev-extensions/docker-php-ext-opcache.ini /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+  echo ">> [INFO] Opcache is enabled ✅"
+fi
