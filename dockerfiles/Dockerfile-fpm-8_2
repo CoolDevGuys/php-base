@@ -37,9 +37,8 @@ RUN apk add  \
     pdo_mysql \
     pcntl
 
-RUN pecl install apcu igbinary redis \
+RUN pecl install apcu igbinary redis xdebug \
     && sh /root/install-rabbitmq.sh \
-    && pecl install xdebug apcu \
     && docker-php-ext-enable \
     apcu \
     opcache \
