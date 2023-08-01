@@ -34,16 +34,16 @@ jobs:
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
-          file: ./dockerfiles/Dockerfile-fpm-8_1
-          target: composer
+          file: ./dockerfiles/Dockerfile-fpm-8_2
+          target: composer-81
           push: true
-          tags: alexromer0/php:composer-81
+          tags: alexromer0/php:composer-82
 
       - name: Build and push base image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
-          file: ./dockerfiles/Dockerfile-fpm-8_1
+          file: ./dockerfiles/Dockerfile-fpm-8_2
           target: base
           push: true
-          tags: alexromer0/php:fpm-81
+          tags: alexromer0/php:fpm-82
