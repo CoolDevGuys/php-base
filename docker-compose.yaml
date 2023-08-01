@@ -13,11 +13,33 @@ services:
     entrypoint: [ "/var/www/html/entrypoint-test" ]
     command: [ "php", "test.php" ]
 
-  composer-2:
+  fpm-82:
+    build:
+      context: .
+      target: base
+      dockerfile: dockerfiles/Dockerfile-fpm-8_2
+    volumes:
+      - ./tests:/var/www/html
+    environment:
+      - XDEBUG_MODE=off
+    entrypoint: [ "/var/www/html/entrypoint-test" ]
+    command: [ "php", "test.php" ]
+
+  composer-2-81:
     build:
       context: .
       target: composer
       dockerfile: dockerfiles/Dockerfile-fpm-8_1
+    volumes:
+      - ./tests:/app
+    entrypoint: [ "/app/entrypoint-test" ]
+    command: [ "php", "test.php" ]
+
+  composer-2-82:
+    build:
+      context: .
+      target: composer
+      dockerfile: dockerfiles/Dockerfile-fpm-8_2
     volumes:
       - ./tests:/app
     entrypoint: [ "/app/entrypoint-test" ]
