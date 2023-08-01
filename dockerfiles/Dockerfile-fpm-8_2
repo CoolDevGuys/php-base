@@ -14,7 +14,8 @@ RUN apk --update upgrade \
     g++ \
     rabbitmq-c-dev \
     pcre-dev \
-    libzip-dev
+    libzip-dev \
+    linux-headers
 
 RUN apk add  \
     make \
