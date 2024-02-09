@@ -30,6 +30,6 @@ The next packages are installed:
 - make
 
 ## Available versions (tags)
-- php-8.1-fpm
+- php-8.1-fpm | php-8.2-fpm
 - composer-2
 
