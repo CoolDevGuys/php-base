@@ -33,7 +33,6 @@ jobs:
       - name: Build and push composer image
         uses: docker/build-push-action@v5
         with:
-          context: .
           file: {context}/dockerfiles/Dockerfile-fpm-8_2
           target: composer
           push: true
@@ -42,7 +41,6 @@ jobs:
       - name: Build and push base image
         uses: docker/build-push-action@v5
         with:
-          context: .
           file: {context}/dockerfiles/Dockerfile-fpm-8_2
           target: base
           push: true
