@@ -24,7 +24,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
-      - name: Log in to Docker Hub
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -33,7 +33,7 @@ jobs:
       - name: Build and push composer image
         uses: docker/build-push-action@v5
         with:
-          file: {context}/dockerfiles/Dockerfile-fpm-8_2
+          file: { context }/dockerfiles/Dockerfile-fpm-8_2
           target: composer
           push: true
           tags: alexromer0/php:composer-82
@@ -41,7 +41,7 @@ jobs:
       - name: Build and push base image
         uses: docker/build-push-action@v5
         with:
-          file: {context}/dockerfiles/Dockerfile-fpm-8_2
+          file: { context }/dockerfiles/Dockerfile-fpm-8_2
           target: base
           push: true
           tags: alexromer0/php:fpm-82
